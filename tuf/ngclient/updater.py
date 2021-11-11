@@ -30,11 +30,22 @@ High-level description of Updater functionality:
         target file and ensures it is verified correct by the metadata.
 
 Below is a simple example of using the Updater to download and verify
-"file.txt" from a remote repository. The required environment for this example
-is:
+"file1.txt" from a remote repository.
 
-    * A webserver running on http://localhost:8000, serving TUF repository
-      metadata at "/tuf-repo/" and targets at "/targets/"
+The required repository environment for this example:
+
+    * The `"tests/repository_data/repository"
+      <https://github.com/theupdateframework/python-tuf/tree/develop/tests/repository_data/repository>`_
+      provides a ready-to-test repository environment.
+    * Using Python built-in http module can provide a test example webserver.
+
+Running the webserver with test repository data::
+
+    $ git clone git@github.com:theupdateframework/python-tuf.git
+    $ python3 -m http.server -d tests/repository_data/repository
+
+The Updater (Client) environment for this example is:
+
     * Local metadata directory "~/tufclient/metadata/" is writable and contains
       a root metadata version for the remote repository
     * Download directory "~/tufclient/downloads/" is writable
@@ -47,7 +58,7 @@ Example::
     # where metadata and targets will be downloaded from.
     updater = Updater(
         repository_dir="~/tufclient/metadata/",
-        metadata_base_url="http://localhost:8000/tuf-repo/",
+        metadata_base_url="http://localhost:8000/metadata/",
         target_dir="~/tufclient/downloads/",
         target_base_url="http://localhost:8000/targets/",
     )
@@ -56,7 +67,7 @@ Example::
     updater.refresh()
 
     # Update metadata, then download target if needed
-    info = updater.get_targetinfo("file.txt")
+    info = updater.get_targetinfo("file1.txt")
     path = updater.find_cached_target(info)
     if path is None:
         path = updater.download_target(info)
