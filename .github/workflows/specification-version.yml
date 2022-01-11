@@ -34,7 +34,8 @@ jobs:
             console.log(
               "Specification (" + spec_version + ") version does not matches with python-tuf supported (" +
                supported_version + ") version."
-            )            const repo = context.repo.owner + "/" + context.repo.repo
+            )
+            const repo = context.repo.owner + "/" + context.repo.repo
             const issues = await github.rest.search.issuesAndPullRequests({
               q: "specification+has+new+version+in:title+state:open+type:issue+repo:" + repo,
             })
